@@ -1,81 +1,198 @@
 import React from 'react';
-import { View, Text, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, ScrollView, SafeAreaView, StyleSheet, Pressable, ViewStyle, TextStyle } from 'react-native';
 import { LogOut, Edit2 } from 'lucide-react-native';
 import { useAuth } from '../../context/AuthContext';
-import InfoCard from '../../components/ui/InfoCard';
-import ActionButton from '../../components/ui/ActionButton';
+import { theme } from '../../theme/colors';
 
 export default function ProfileScreen() {
   const { userName, userEmail, logout } = useAuth();
-  
-  // Lógica da primeira letra
+
   const firstLetter = userName ? userName.charAt(0).toUpperCase() : 'U';
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <View className="flex-1 flex-col">
-        
+    <SafeAreaView style={styles.container}>
+      <View style={styles.flexContainer}>
+
         {/* Header */}
-        <View className="bg-white border-b border-gray-100 p-4 pt-2">
-          <Text className="text-2xl font-bold text-gray-900">Meu Perfil</Text>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Meu Perfil</Text>
         </View>
 
         {/* Content Scrollable */}
-        <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
-          
+        <ScrollView style={styles.content} contentContainerStyle={{ padding: 24 }} showsVerticalScrollIndicator={false}>
+
           {/* Avatar Section */}
-          <View className="flex-col items-center mb-8 mt-4">
-            <View className="w-24 h-24 rounded-full bg-blue-100 items-center justify-center mb-4 border-2 border-blue-50">
-              <Text className="text-blue-600 text-4xl font-bold">
+          <View style={styles.avatarSection}>
+            <View style={styles.avatarCircle}>
+              <Text style={styles.avatarText}>
                 {firstLetter}
               </Text>
             </View>
-            <Text className="text-xl font-bold text-gray-900">{userName}</Text>
-            <Text className="text-sm text-gray-500">Cuidador Profissional</Text>
+            <Text style={styles.profileName}>{userName || "Usuário"}</Text>
+            <Text style={styles.profileRole}>Cuidador Profissional</Text>
           </View>
 
           {/* Info Cards Section */}
-          <View className="space-y-4 mb-8">
-            <InfoCard 
-              label="Email" 
-              value={userEmail} 
-            />
-            <InfoCard 
-              label="Telefone" 
-              value="(11) 99999-0000" 
-            />
-            <InfoCard 
-              label="Deficientes sob Cuidado" 
-              value="3 pessoas" 
-            />
-            <InfoCard 
-              label="Status" 
-              value="Online e disponível" 
-              valueColor="text-green-600"
-            />
+          <View style={styles.infoSection}>
+            {/* Card Email */}
+            <View style={styles.infoCard}>
+              <Text style={styles.cardLabel}>Email</Text>
+              <Text style={styles.cardValue}>{userEmail || "email@exemplo.com"}</Text>
+            </View>
+
+            {/* Card Telefone */}
+            <View style={styles.infoCard}>
+              <Text style={styles.cardLabel}>Telefone</Text>
+              <Text style={styles.cardValue}>(11) 99999-0000</Text>
+            </View>
+
+            {/* Card Deficientes */}
+            <View style={styles.infoCard}>
+              <Text style={styles.cardLabel}>Deficientes sob Cuidado</Text>
+              <Text style={styles.cardValue}>3 pessoas</Text>
+            </View>
+
+            {/* Card Status */}
+            <View style={styles.infoCard}>
+              <Text style={styles.cardLabel}>Status</Text>
+              <Text style={[styles.cardValue, { color: theme.colors.success }]}>Online e disponível</Text>
+            </View>
           </View>
         </ScrollView>
 
         {/* Actions Footer (Fixed at bottom) */}
-        <View className="p-4 border-t border-gray-100 bg-white shadow-sm">
-            {/* Botão de Editar (apenas visual por enquanto) */}
-          <ActionButton 
-            title="Editar Perfil" 
-            icon={Edit2} 
-            onPress={() => console.log('Editar')} 
-            variant="primary"
-          />
+        <View style={styles.footer}>
+          {/* Botão de Editar */}
           
+
           {/* Botão de Logout */}
-          <ActionButton 
-            title="Sair da Conta" 
-            icon={LogOut} 
-            onPress={logout} 
-            variant="destructive"
-          />
+          <Pressable style={styles.logoutButton} onPress={logout}>
+            <LogOut size={18} color={theme.colors.destructive} />
+            <Text style={styles.logoutButtonText}>Sair da Conta</Text>
+          </Pressable>
         </View>
 
       </View>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.background,
+  } as ViewStyle,
+  flexContainer: {
+    flex: 1,
+  } as ViewStyle,
+  header: {
+    backgroundColor: theme.colors.card,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
+    padding: 16,
+  } as ViewStyle,
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: theme.colors.foreground,
+  } as TextStyle,
+  content: {
+    flex: 1,
+  } as ViewStyle,
+
+  // Avatar
+  avatarSection: {
+    alignItems: 'center',
+    marginBottom: 32,
+    marginTop: 8,
+  } as ViewStyle,
+  avatarCircle: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    backgroundColor: '#EDE9FE', // Roxo bem claro
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+    borderWidth: 2,
+    borderColor: theme.colors.muted,
+  } as ViewStyle,
+  avatarText: {
+    color: theme.colors.accent,
+    fontSize: 36,
+    fontWeight: 'bold',
+  } as TextStyle,
+  profileName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: theme.colors.foreground,
+  } as TextStyle,
+  profileRole: {
+    fontSize: 14,
+    color: theme.colors.mutedForeground,
+  } as TextStyle,
+
+  // Info Cards
+  infoSection: {
+    gap: 16,
+    marginBottom: 32,
+  } as ViewStyle,
+  infoCard: {
+    backgroundColor: theme.colors.card,
+    padding: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  } as ViewStyle,
+  cardLabel: {
+    fontSize: 12,
+    color: theme.colors.mutedForeground,
+    textTransform: 'uppercase',
+    fontWeight: '600',
+    marginBottom: 4,
+  } as TextStyle,
+  cardValue: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: theme.colors.foreground,
+  } as TextStyle,
+
+  // Footer Actions
+  footer: {
+    padding: 16,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.border,
+    backgroundColor: theme.colors.card,
+    gap: 12,
+  } as ViewStyle,
+  editButton: {
+    backgroundColor: theme.colors.accent,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    borderRadius: 12,
+    gap: 8,
+  } as ViewStyle,
+  editButtonText: {
+    color: theme.colors.accentForeground,
+    fontWeight: 'bold',
+    fontSize: 16,
+  } as TextStyle,
+  logoutButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: theme.colors.destructive,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    borderRadius: 12,
+    gap: 8,
+  } as ViewStyle,
+  logoutButtonText: {
+    color: theme.colors.destructive,
+    fontWeight: 'bold',
+    fontSize: 16,
+  } as TextStyle,
+});
