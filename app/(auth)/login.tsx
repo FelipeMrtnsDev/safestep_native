@@ -1,21 +1,7 @@
 import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  Pressable, 
-  SafeAreaView, 
-  KeyboardAvoidingView, 
-  Platform, 
-  Image, 
-  StyleSheet,
-  ViewStyle,
-  TextStyle,
-  ImageStyle
-} from 'react-native';
+import { View, Text, Image, TouchableOpacity, SafeAreaView, KeyboardAvoidingView, Platform } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { Eye, HeartHandshake } from 'lucide-react-native';
-import { theme } from '../../theme/colors';
 
 export default function LoginScreen() {
   const { login } = useAuth();
@@ -31,151 +17,51 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardView}
+        className="flex-1 justify-center p-6"
       >
-        
-        {/* Logo Section */}
-        <View style={styles.logoSection}>
-          <View style={styles.logoBox}>
-            {/* AQUI ESTÁ A MUDANÇA:
-               Troque 'icon.png' pelo nome exato do seu arquivo dentro da pasta assets 
-            */}
+        <View className="items-center mb-10">
+          
+          {/* Container da Logo */}
+          <View className="w-24 h-24 rounded-2xl mb-4 overflow-hidden shadow-sm border border-gray-100">
             <Image 
-              source={require('../../assets/icon.png')} 
-              style={styles.logoImage}
-              resizeMode="cover" // ou "contain" se quiser que a imagem inteira apareça sem cortar
+              source={require('../../assets/safestep_logo.jpg')}
+              className="w-full h-full"
+              resizeMode="cover"
             />
           </View>
-          
-          <Text style={styles.appTitle}>Safestep</Text>
-          <Text style={styles.appSubtitle}>
+
+          <Text className="text-3xl font-bold text-gray-900">Safestep</Text>
+          <Text className="text-gray-500 text-center mt-2">
             Conectando quem precisa de ajuda a quem ama cuidar.
           </Text>
         </View>
 
-        <Text style={styles.sectionLabel}>
+        <Text className="text-center text-gray-500 mb-4 font-semibold">
           Entrar como:
         </Text>
 
-        <View style={styles.buttonGroup}>
-          {/* Botão Cuidador */}
-          <Pressable 
+        <View className="gap-4">
+          <TouchableOpacity 
             onPress={() => handleLogin('caregiver')}
-            style={({ pressed }) => [
-              styles.roleButton,
-              styles.caregiverButton,
-              { opacity: pressed ? 0.9 : 1 }
-            ]}
+            className="w-full bg-blue-600 p-4 rounded-xl flex-row items-center justify-center gap-3 shadow-sm"
           >
             <HeartHandshake color="white" size={24} />
-            <Text style={styles.buttonText}>Sou Cuidador</Text>
-          </Pressable>
+            <Text className="text-white font-bold text-lg">Sou Cuidador</Text>
+          </TouchableOpacity>
 
-          {/* Botão Deficiente Visual */}
-          <Pressable 
+          <TouchableOpacity 
             onPress={() => handleLogin('blind')}
-            style={({ pressed }) => [
-              styles.roleButton,
-              styles.blindButton,
-              { opacity: pressed ? 0.9 : 1 }
-            ]}
+            className="w-full bg-gray-900 p-4 rounded-xl flex-row items-center justify-center gap-3 shadow-sm"
           >
             <Eye color="white" size={24} />
-            <Text style={styles.buttonText}>Sou Deficiente Visual</Text>
-          </Pressable>
+            <Text className="text-white font-bold text-lg">Sou Deficiente Visual</Text>
+          </TouchableOpacity>
         </View>
 
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-  } as ViewStyle,
-  keyboardView: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 24,
-  } as ViewStyle,
-  
-  // Logo Styles
-  logoSection: {
-    alignItems: 'center',
-    marginBottom: 40,
-  } as ViewStyle,
-  logoBox: {
-    width: 80,
-    height: 80,
-    borderRadius: 20,
-    marginBottom: 16,
-    overflow: 'hidden', // Garante que a imagem respeite as bordas arredondadas
-    backgroundColor: 'transparent', // Caso a imagem tenha fundo transparente
-    // Sombra suave
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-  } as ViewStyle,
-  logoImage: {
-    width: '100%',
-    height: '100%',
-  } as ImageStyle,
-  appTitle: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: theme.colors.foreground,
-  } as TextStyle,
-  appSubtitle: {
-    textAlign: 'center',
-    color: theme.colors.mutedForeground,
-    marginTop: 8,
-    fontSize: 16,
-  } as TextStyle,
-
-  // Buttons Section
-  sectionLabel: {
-    textAlign: 'center',
-    color: theme.colors.mutedForeground,
-    marginBottom: 16,
-    fontWeight: '600',
-  } as TextStyle,
-  buttonGroup: {
-    gap: 16,
-  } as ViewStyle,
-  roleButton: {
-    width: '100%',
-    padding: 16,
-    borderRadius: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    // Sombra
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  } as ViewStyle,
-  
-  // Specific Button Colors
-  caregiverButton: {
-    backgroundColor: theme.colors.accent, // Roxo/Azul do tema
-  } as ViewStyle,
-  blindButton: {
-    backgroundColor: theme.colors.primary, // Cinza escuro/Preto do tema
-  } as ViewStyle,
-  
-  buttonText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    fontSize: 18,
-  } as TextStyle,
-});
