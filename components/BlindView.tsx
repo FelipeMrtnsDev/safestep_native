@@ -180,4 +180,4 @@ const styles = StyleSheet.create({
     height: 12, // h-3
     borderRadius: 6, // rounded-full
   } as ViewStyle,
-});36w
+});
